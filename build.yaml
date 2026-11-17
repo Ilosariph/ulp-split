@@ -1,0 +1,10 @@
+# GitHub Actions build matrix (ZMK v0.3: the XIAO nRF52840 board is called seeeduino_xiao_ble)
+---
+include:
+  - board: seeeduino_xiao_ble
+    shield: ulp_split_left
+  - board: seeeduino_xiao_ble
+    shield: ulp_split_right
+  # flash to both halves to wipe stored BLE bonds if the halves stop pairing
+  - board: seeeduino_xiao_ble
+    shield: settings_reset

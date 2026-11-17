@@ -1,0 +1,238 @@
+# ULP split: 6 columns, outer 4 have an extra row below the bottom row (4,4,4,4,3,3) + 3 thumbs per half
+# Switches: Cherry MX ULP, through-hole double-sided (cherry_ulp footprint)
+# Spacing: choc (18 x 17 mm)
+# Controller: Seeed XIAO nRF52840, surface mounted (ZMK board `xiao_ble//zmk`)
+#   battery via Molex Pico-EZmate -> power switch -> XIAO BAT+ pad (charges over USB-C when switched on)
+#   reset: use the XIAO's onboard button
+#
+# Matrix (col2row, identical on both halves, ZMK `&xiao_d N`), uses all 11 GPIO:
+#   cols  outer=D0 pinky=D1 ring=D2 middle=D3 index=D4 inner=D5
+#   rows  top=D7 home=D8 bottom=D9 lower=D6 (outer 4 columns only) thumb=D10
+#   thumbs near=D4 mid=D5 far=D2 (on row D10)
+
+meta:
+  engine: 4.2.1
+  name: ulp-split
+  author: simon
+
+units:
+  kx: cx
+  ky: cy
+  $default_spread: cx
+  $default_padding: cy
+  $default_width: cx - 0.5
+  $default_height: cy - 0.5
+
+points:
+  mirror:
+    ref: matrix_inner_home
+    distance: 4kx
+  zones:
+    matrix:
+      columns:
+        outer:
+          key.column_net: D0
+        pinky:
+          key.column_net: D1
+        ring:
+          key.stagger: 0.5ky
+          key.column_net: D2
+        middle:
+          key.stagger: 0.25ky
+          key.column_net: D3
+        index:
+          key.stagger: -0.25ky
+          key.column_net: D4
+          rows.lower.skip: true
+        inner:
+          key.stagger: -0.15ky
+          key.column_net: D5
+          rows.lower.skip: true
+      rows:
+        # rows are listed bottom to top; lower only exists on the outer 4 columns
+        lower.row_net: D6
+        bottom.row_net: D9
+        home.row_net: D8
+        top.row_net: D7
+    thumb:
+      anchor:
+        ref: matrix_index_bottom
+        shift: [0.25kx, -ky - 3.5]
+        rotate: -6
+      columns:
+        near:
+          key.column_net: D4
+        mid:
+          key.splay: -8
+          key.origin: [-0.5kx, -0.5ky]
+          key.column_net: D5
+        far:
+          key.splay: -8
+          key.origin: [-0.5kx, -0.5ky]
+          key.column_net: D2
+      rows:
+        cluster.row_net: D10
+
+outlines:
+  _keys:
+    - what: rectangle
+      where: /^(matrix|thumb)_/
+      size: [kx, ky]
+  _mcu:
+    - what: rectangle
+      where:
+        ref: matrix_inner_top
+        shift: [kx + 4, -1.5]
+      size: [22, 45]
+  # two small rectangular patches for the slivers next to the thumb cluster:
+  # square off the corner below the middle column's lowest key, and run the inner column's
+  # outer edge straight down to the thumbs
+  _fill:
+    - what: rectangle
+      where:
+        ref: matrix_middle_lower
+        shift: [11.25, -1.875]
+      size: [5.5, 13.25]
+    - what: rectangle
+      where:
+        ref: matrix_inner_bottom
+        shift: [7, -11.2]
+      size: [4, 6.5]
+  _raw:
+    - _keys
+    - _mcu
+    - _fill
+  # cable hole for the battery wires + slit out to the outer edge, so the cable slides in from the side
+  _cable_slot:
+    - what: circle
+      where:
+        ref: matrix_inner_top
+        shift: [kx + 4, -13]
+      radius: 1.25
+    - what: rectangle
+      where:
+        ref: matrix_inner_top
+        shift: [kx + 11, -13]
+      size: [16, 1.5]
+  left:
+    - what: outline
+      name: _raw
+      expand: 2
+      joints: round
+    - what: outline
+      name: _cable_slot
+      operation: subtract
+  _keys_r:
+    - $extends: outlines._keys.0
+      asym: clone
+  _mcu_r:
+    - $extends: outlines._mcu.0
+      asym: clone
+  _fill_r:
+    - $extends: outlines._fill.0
+      asym: clone
+    - $extends: outlines._fill.1
+      asym: clone
+  _raw_r:
+    - _keys_r
+    - _mcu_r
+    - _fill_r
+  _cable_slot_r:
+    - $extends: outlines._cable_slot.0
+      asym: clone
+    - $extends: outlines._cable_slot.1
+      asym: clone
+  right:
+    - what: outline
+      name: _raw_r
+      expand: 2
+      joints: round
+    - what: outline
+      name: _cable_slot_r
+      operation: subtract
+  # board outline shrunk by the edge clearance; route.py hands this to Freerouting instead of the real edge
+  left_route:
+    - what: outline
+      name: left
+      expand: -0.7
+  right_route:
+    - what: outline
+      name: right
+      expand: -0.7
+  # full preview (both halves)
+  preview:
+    - what: rectangle
+      where: true
+      size: [kx - 0.5, ky - 0.5]
+    - what: rectangle
+      where:
+        ref: matrix_inner_top
+        shift: [kx + 4, 12.5]
+      asym: both
+      size: [17.8, 21]
+
+pcbs:
+  left:
+    outlines:
+      edge:
+        outline: left
+      route_edge:
+        outline: left_route
+        layer: Eco1.User
+    footprints:
+      switch:
+        what: cherry_ulp
+        where: /^(matrix|thumb)_/
+        params:
+          from: "{{column_net}}"
+          to: "{{colrow}}"
+          keycaps: true
+      diode:
+        what: diode_sod123_back
+        where: /^(matrix|thumb)_/
+        params:
+          from: "{{colrow}}"
+          to: "{{row_net}}"
+        # back side, under the switch, clear of pins/tabs
+        adjust.shift: [0, 5.5]
+      mcu:
+        what: xiao_nrf52840
+        where:
+          ref: matrix_inner_top
+          # USB-C end flush with the board edge so the plug isn't blocked
+          shift: [kx + 4, 12.5]
+      # Molex Pico-EZmate (1.65 mm mated height) on top, below keycap height; the cable runs up
+      # to the cable slot (see outlines) and drops through to the battery, which sits flat under the XIAO area
+      battery:
+        what: battery_connector_molex_pico_ezmate_1x02
+        where:
+          ref: matrix_inner_top
+          shift: [kx + 4, -21.5]
+          rotate: 180
+        params:
+          side: F
+          BAT_P: BAT_IN
+          BAT_N: GND
+      # Alps SSSS811101 side-actuated slide switch, lever sticks out past the outer edge of the controller area
+      power:
+        what: power_switch_smd_side
+        where:
+          ref: matrix_inner_top
+          shift: [kx + 14.9, -6]
+        params:
+          side: F
+          from: BAT_IN
+          to: BAT
+  right:
+    $extends: pcbs.left
+    outlines.edge.outline: right
+    outlines.route_edge.outline: right_route
+    footprints:
+      switch.asym: clone
+      diode.asym: clone
+      mcu.asym: clone
+      battery.asym: clone
+      power:
+        asym: clone
+        # mirroring keeps rotation 0, so turn it around to point the lever at the right half's outer edge
+        adjust.rotate: 180

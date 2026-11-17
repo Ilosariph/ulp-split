@@ -1,0 +1,11 @@
+file_format: "1"
+id: ulp_split
+name: ULP Split
+type: shield
+url: https://github.com/Ilosariph/ulp-split
+requires: [seeed_xiao]
+features:
+  - keys
+siblings:
+  - ulp_split_left
+  - ulp_split_right

@@ -1,0 +1,67 @@
+/*
+ * Key positions generated from the ergogen points (pcb/zmk_physical_layout.py), 1u = 18 mm.
+ * Order: top, home, bottom row (12 each, left to right), then
+ * left lower x4, left thumbs near/mid/far, right thumbs far/mid/near, right lower x4.
+ */
+
+#include <physical_layouts.dtsi>
+
+/ {
+    ulp_split_layout: ulp_split_layout {
+        compatible = "zmk,physical-layout";
+        display-name = "Default";
+
+        keys  //                     w     h     x     y    rot    rx    ry
+            = <&key_physical_attrs   100   100     0    71     0    50   121>
+            , <&key_physical_attrs   100   100   100    71     0   150   121>
+            , <&key_physical_attrs   100   100   200    24     0   250    74>
+            , <&key_physical_attrs   100   100   300     0     0   350    50>
+            , <&key_physical_attrs   100   100   400    24     0   450    74>
+            , <&key_physical_attrs   100   100   500    38     0   550    88>
+            , <&key_physical_attrs   100   100   900    38     0   950    88>
+            , <&key_physical_attrs   100   100  1000    24     0  1050    74>
+            , <&key_physical_attrs   100   100  1100     0     0  1150    50>
+            , <&key_physical_attrs   100   100  1200    24     0  1250    74>
+            , <&key_physical_attrs   100   100  1300    71     0  1350   121>
+            , <&key_physical_attrs   100   100  1400    71     0  1450   121>
+            , <&key_physical_attrs   100   100     0   165     0    50   215>
+            , <&key_physical_attrs   100   100   100   165     0   150   215>
+            , <&key_physical_attrs   100   100   200   118     0   250   168>
+            , <&key_physical_attrs   100   100   300    94     0   350   144>
+            , <&key_physical_attrs   100   100   400   118     0   450   168>
+            , <&key_physical_attrs   100   100   500   132     0   550   182>
+            , <&key_physical_attrs   100   100   900   132     0   950   182>
+            , <&key_physical_attrs   100   100  1000   118     0  1050   168>
+            , <&key_physical_attrs   100   100  1100    94     0  1150   144>
+            , <&key_physical_attrs   100   100  1200   118     0  1250   168>
+            , <&key_physical_attrs   100   100  1300   165     0  1350   215>
+            , <&key_physical_attrs   100   100  1400   165     0  1450   215>
+            , <&key_physical_attrs   100   100     0   260     0    50   310>
+            , <&key_physical_attrs   100   100   100   260     0   150   310>
+            , <&key_physical_attrs   100   100   200   212     0   250   262>
+            , <&key_physical_attrs   100   100   300   189     0   350   239>
+            , <&key_physical_attrs   100   100   400   212     0   450   262>
+            , <&key_physical_attrs   100   100   500   227     0   550   277>
+            , <&key_physical_attrs   100   100   900   227     0   950   277>
+            , <&key_physical_attrs   100   100  1000   212     0  1050   262>
+            , <&key_physical_attrs   100   100  1100   189     0  1150   239>
+            , <&key_physical_attrs   100   100  1200   212     0  1250   262>
+            , <&key_physical_attrs   100   100  1300   260     0  1350   310>
+            , <&key_physical_attrs   100   100  1400   260     0  1450   310>
+            , <&key_physical_attrs   100   100     0   354     0    50   404>
+            , <&key_physical_attrs   100   100   100   354     0   150   404>
+            , <&key_physical_attrs   100   100   200   307     0   250   357>
+            , <&key_physical_attrs   100   100   300   283     0   350   333>
+            , <&key_physical_attrs   100   100   425   326   600   475   376>
+            , <&key_physical_attrs   100   100   530   345  1400   580   395>
+            , <&key_physical_attrs   100   100   631   378  2200   681   428>
+            , <&key_physical_attrs   100   100   769   378 (-2200)   819   428>
+            , <&key_physical_attrs   100   100   870   345 (-1400)   920   395>
+            , <&key_physical_attrs   100   100   975   326  (-600)  1025   376>
+            , <&key_physical_attrs   100   100  1100   283     0  1150   333>
+            , <&key_physical_attrs   100   100  1200   307     0  1250   357>
+            , <&key_physical_attrs   100   100  1300   354     0  1350   404>
+            , <&key_physical_attrs   100   100  1400   354     0  1450   404>
+            ;
+    };
+};
