@@ -7,7 +7,7 @@ Cherry MX ULP switches (through-hole, double-sided footprint), Seeed XIAO nRF528
 
 ```
 pcb/        ergogen config, footprints, autorouting + Gerber build
-config/     ZMK keymap + conf (Colemak + Swiss German umlauts, ported from the Sofle)
+config/     ZMK keymap + conf (Colemak-DH-ish + Swiss German, ported from the tightarc Vial layout)
 boards/     ZMK shield ulp_split (left = central)
 ```
 
