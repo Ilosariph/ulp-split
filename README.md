@@ -9,6 +9,7 @@ Cherry MX ULP switches (through-hole, double-sided footprint), Seeed XIAO nRF528
 pcb/        ergogen config, footprints, autorouting + Gerber build
 config/     ZMK keymap + conf (Colemak-DH-ish + Swiss German, ported from the tightarc Vial layout)
 boards/     ZMK shield ulp_split (left = central)
+case/       OpenSCAD tray case with 401525 LiPo pocket
 ```
 
 ## PCB
@@ -22,6 +23,20 @@ JLCPCB: 2 layers, 0.8 mm, LeadFree HASL, tented vias, Remove Mark.
 
 Parts per half: 25 Cherry MX ULP, 25 1N4148W (SOD-123), XIAO nRF52840, C&K PCM12SMTR power switch,
 Molex 78171-0002 Pico-EZmate header + 36920-0200 cable (cut in half), LiPo with protection circuit.
+
+## Case
+
+`case/case.scad`: 5 mm tall tray (1.2 floor, 2 mm under the PCB, 0.8 PCB, 1 mm lip). The PCB drops in on a perimeter
+ledge + a post under each key; fix it with thin double-sided tape. The 401525 LiPo sits in its own pocket in the
+notch between the far thumb key and the bottom of the controller column, next to the battery connector; a channel
+under the PCB runs from the cable hole to the pocket. Openings for USB-C and the power switch lever.
+
+```
+openscad -o left.stl case/case.scad
+openscad -D 'side="right"' -o right.stl case/case.scad
+```
+
+`case/pcb_left.dxf` is a copy of `pcb/output/outlines/left.dxf`; copy it again after changing the board outline.
 
 ## Matrix
 
