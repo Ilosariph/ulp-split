@@ -98,10 +98,42 @@ outlines:
         ref: matrix_inner_bottom
         shift: [7, -11.2]
       size: [4, 6.5]
+  # small tabs on the outer side for visible M2 screws (screw heads clear of the keycaps), see mounts below
+  _tabs:
+    - what: circle
+      where:
+        ref: matrix_outer_lower
+        shift: [-11, 42.5]
+      radius: 2.6
+    - what: circle
+      where:
+        ref: matrix_outer_lower
+        shift: [-11, 8.5]
+      radius: 2.6
+    - what: circle
+      where:
+        ref: matrix_outer_lower
+        shift: [9, 61.5]
+      radius: 2.6
+    - what: circle
+      where:
+        ref: matrix_outer_lower
+        shift: [9, -10.5]
+      radius: 2.6
+  _tabs_r:
+    - $extends: outlines._tabs.0
+      asym: clone
+    - $extends: outlines._tabs.1
+      asym: clone
+    - $extends: outlines._tabs.2
+      asym: clone
+    - $extends: outlines._tabs.3
+      asym: clone
   _raw:
     - _keys
     - _mcu
     - _fill
+    - _tabs
   # cable hole for the battery wires + slit out to the outer edge, so the cable slides in from the side
   _cable_slot:
     - what: circle
@@ -137,6 +169,7 @@ outlines:
     - _keys_r
     - _mcu_r
     - _fill_r
+    - _tabs_r
   _cable_slot_r:
     - $extends: outlines._cable_slot.0
       asym: clone
@@ -223,6 +256,89 @@ pcbs:
           side: F
           from: BAT_IN
           to: BAT
+      # M2 mounting holes (absolute coords = shift from matrix_outer_lower at 0,0), screws from the top into case bosses.
+      # mount_*: head outside the keycaps (tabs, thumb gap, controller column)
+      # mount_opt_*: optional, between switch housings under the keycaps (needs low head, e.g. M2 wafer/ISO 7380)
+      mount_1:
+        what: mounting_hole_m2
+        where:
+          ref: matrix_outer_lower
+          shift: [-11, 42.5]
+      mount_2:
+        what: mounting_hole_m2
+        where:
+          ref: matrix_outer_lower
+          shift: [-11, 8.5]
+      mount_3:
+        what: mounting_hole_m2
+        where:
+          ref: matrix_outer_lower
+          shift: [9, 61.5]
+      mount_4:
+        what: mounting_hole_m2
+        where:
+          ref: matrix_outer_lower
+          shift: [9, -10.5]
+      mount_5:
+        what: mounting_hole_m2
+        where:
+          ref: matrix_outer_lower
+          shift: [65.9, 14.5]
+      mount_6:
+        what: mounting_hole_m2
+        where:
+          ref: matrix_outer_lower
+          shift: [77.7, 15.2]
+      mount_7:
+        what: mounting_hole_m2
+        where:
+          ref: matrix_outer_lower
+          shift: [98.0, 12.6]
+      mount_8:
+        what: mounting_hole_m2
+        where:
+          ref: matrix_outer_lower
+          shift: [105.8, 50.2]
+      mount_9:
+        what: mounting_hole_m2
+        where:
+          ref: matrix_outer_lower
+          shift: [122.1, 34.0]
+      mount_opt_1:
+        what: mounting_hole_m2
+        where:
+          ref: matrix_outer_lower
+          shift: [9, 25.5]
+      mount_opt_2:
+        what: mounting_hole_m2
+        where:
+          ref: matrix_outer_lower
+          shift: [27.8, 17]
+      mount_opt_3:
+        what: mounting_hole_m2
+        where:
+          ref: matrix_outer_lower
+          shift: [27.8, 51]
+      mount_opt_4:
+        what: mounting_hole_m2
+        where:
+          ref: matrix_outer_lower
+          shift: [44.1, 34]
+      mount_opt_5:
+        what: mounting_hole_m2
+        where:
+          ref: matrix_outer_lower
+          shift: [63.8, 51]
+      mount_opt_6:
+        what: mounting_hole_m2
+        where:
+          ref: matrix_outer_lower
+          shift: [72, 34.4]
+      mount_opt_7:
+        what: mounting_hole_m2
+        where:
+          ref: matrix_outer_lower
+          shift: [86.7, 48.8]
   right:
     $extends: pcbs.left
     outlines.edge.outline: right
@@ -232,6 +348,22 @@ pcbs:
       diode.asym: clone
       mcu.asym: clone
       battery.asym: clone
+      mount_1.asym: clone
+      mount_2.asym: clone
+      mount_3.asym: clone
+      mount_4.asym: clone
+      mount_5.asym: clone
+      mount_6.asym: clone
+      mount_7.asym: clone
+      mount_8.asym: clone
+      mount_9.asym: clone
+      mount_opt_1.asym: clone
+      mount_opt_2.asym: clone
+      mount_opt_3.asym: clone
+      mount_opt_4.asym: clone
+      mount_opt_5.asym: clone
+      mount_opt_6.asym: clone
+      mount_opt_7.asym: clone
       power:
         asym: clone
         # mirroring keeps rotation 0, so turn it around to point the lever at the right half's outer edge

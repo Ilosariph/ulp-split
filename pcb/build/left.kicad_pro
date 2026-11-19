@@ -309,6 +309,10 @@
       },
       {
         "netclass": "Default",
+        "pattern": "outer_lower"
+      },
+      {
+        "netclass": "Default",
         "pattern": "outer_bottom"
       },
       {
@@ -321,11 +325,11 @@
       },
       {
         "netclass": "Default",
-        "pattern": "outer_num"
+        "pattern": "D1"
       },
       {
         "netclass": "Default",
-        "pattern": "D1"
+        "pattern": "pinky_lower"
       },
       {
         "netclass": "Default",
@@ -341,11 +345,11 @@
       },
       {
         "netclass": "Default",
-        "pattern": "pinky_num"
+        "pattern": "D2"
       },
       {
         "netclass": "Default",
-        "pattern": "D2"
+        "pattern": "ring_lower"
       },
       {
         "netclass": "Default",
@@ -361,11 +365,11 @@
       },
       {
         "netclass": "Default",
-        "pattern": "ring_num"
+        "pattern": "D3"
       },
       {
         "netclass": "Default",
-        "pattern": "D3"
+        "pattern": "middle_lower"
       },
       {
         "netclass": "Default",
@@ -378,10 +382,6 @@
       {
         "netclass": "Default",
         "pattern": "middle_top"
-      },
-      {
-        "netclass": "Default",
-        "pattern": "middle_num"
       },
       {
         "netclass": "Default",
@@ -429,6 +429,10 @@
       },
       {
         "netclass": "Default",
+        "pattern": "D6"
+      },
+      {
+        "netclass": "Default",
         "pattern": "D9"
       },
       {
@@ -438,10 +442,6 @@
       {
         "netclass": "Default",
         "pattern": "D7"
-      },
-      {
-        "netclass": "Default",
-        "pattern": "D6"
       },
       {
         "netclass": "Default",
@@ -484,13 +484,7 @@
     "bus_aliases": {},
     "legacy_lib_dir": "",
     "legacy_lib_list": [],
-    "top_level_sheets": [
-      {
-        "filename": "left.kicad_sch",
-        "name": "left",
-        "uuid": "00000000-0000-0000-0000-000000000000"
-      }
-    ]
+    "top_level_sheets": []
   },
   "sheets": [],
   "text_variables": {},

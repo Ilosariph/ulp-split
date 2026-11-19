@@ -3,7 +3,9 @@
 // Board outline: pcb_left.dxf (copy of pcb/output/outlines/left.dxf, re-copy after changing pcb/config.yaml).
 //
 // Stack (z, from bottom):  floor | gap for diodes + switch pins | PCB | lip
-// PCB rests on a perimeter ledge + one post per key, drops in from the top (fix with thin double-sided tape).
+// PCB rests on a perimeter ledge + one post per key and is held by M2 screws from the top into bosses
+// (heat-set inserts M2 x 3 x 3.2 OD, or self-tapping with screw_hole = 1.7). Screws M2 x 4.
+// mounts: heads clear of the keycaps. mounts_opt: under the keycaps, between switch housings (low head only).
 // Battery sits beside the PCB (no PCB above it), so it can be thicker than the gap under the board.
 //
 // openscad -D 'side="right"' -o right.stl case.scad
@@ -19,6 +21,9 @@ pcb_t   = 0.8;
 lip     = 1.0;          // wall height above PCB top
 ledge   = 1.5;          // perimeter shelf under the PCB edge
 post_r  = 1.5;          // support post under each key
+boss_d  = 4.6;          // screw boss under the PCB
+screw_hole = 3.2;       // 3.2 heat-set insert, 1.7 self-tapping M2
+use_opt = true;         // bosses for the optional under-keycap holes
 
 /* [Battery 401525] */
 bat     = [25, 15, 4.0];  // nominal L x W x T (check your cell incl. protection PCB + tape)
@@ -49,6 +54,13 @@ keys = [
   [76.5, 5, -6], [95.3512, 1.676, -14], [113.5563, -4.2392, -22], // thumbs near, mid, far
 ];
 post_off = [0, 2];      // key-local spot clear of switch pins (y -2.3) and diode (y +5.5)
+
+// M2 holes, same as pcb/config.yaml mount_* / mount_opt_*
+mounts = [[-11, 42.5], [-11, 8.5], [9, 61.5], [9, -10.5],         // outer side tabs
+          [65.9, 14.5], [77.7, 15.2], [98.0, 12.6],               // thumb gap
+          [105.8, 50.2], [122.1, 34.0]];                          // controller column
+mounts_opt = [[9, 25.5], [27.8, 17], [27.8, 51], [44.1, 34], [63.8, 51], [72, 34.4], [86.7, 48.8]];
+holes = concat(mounts, use_opt ? mounts_opt : []);
 
 // parts referenced to matrix_inner_top (90, 56.95)
 mcu_c   = [112, 69.45];  // XIAO, USB-C at +y board edge (y 79.95)
@@ -94,7 +106,10 @@ module case_left() {
     translate([0, 0, floor_t]) linear_extrude(gap + 0.01) difference() {
       offset(r = -ledge) pcb2d();
       key_posts();
+      for (m = holes) translate(m) circle(d = boss_d);
     }
+    // screw holes through bosses and floor
+    for (m = holes) translate([m[0], m[1], -1]) cylinder(d = screw_hole, h = z_pcb + 1.01);
     // battery pocket
     translate([0, 0, pocket_floor]) linear_extrude(h) pocket2d();
     // wire channel through the ledge: cable hole -> pocket (under the PCB)
