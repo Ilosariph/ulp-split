@@ -5,10 +5,12 @@
 #   battery via Molex Pico-EZmate -> power switch -> XIAO BAT+ pad (charges over USB-C when switched on)
 #   reset: use the XIAO's onboard button
 #
-# Matrix (col2row, identical on both halves, ZMK `&xiao_d N`), uses all 11 GPIO:
-#   cols  outer=D0 pinky=D1 ring=D2 middle=D3 index=D4 inner=D5
-#   rows  top=D7 home=D8 bottom=D9 lower=D6 (outer 4 columns only) thumb=D10
-#   thumbs near=D4 mid=D5 far=D2 (on row D10)
+# Matrix (col2row, identical on both halves, ZMK `&xiao_d N`): 5 x 5 = 25 keys on D0..D9,
+# trackpad pads (both halves, firmware uses the right one): SDA = NFC1 (P0.09), SCL = NFC2 (P0.10), DR = D10,
+# 4.7k pull-ups on SDA/SCL
+#   cols  outer=D0 pinky=D1 ring=D2 middle=D3 index=D4 (the inner column and the thumbs borrow these)
+#   rows  top=D7 home=D8 bottom=D9 lower=D6 (outer 4 columns + near thumb) extra=D5 (inner column, mid/far thumb)
+#   inner top=D3/D5 home=D4/D5 bottom=D2/D5, thumbs near=D4/D6 mid=D1/D5 far=D0/D5 (col/row)
 
 meta:
   engine: 4.2.1
@@ -46,8 +48,11 @@ points:
           rows.lower.skip: true
         inner:
           key.stagger: -0.15ky
-          key.column_net: D5
           rows.lower.skip: true
+          # no column pin of its own: on the extra row D5, columns from the middle/index/ring nets
+          rows.top: {column_net: D3, row_net: D5}
+          rows.home: {column_net: D4, row_net: D5}
+          rows.bottom: {column_net: D2, row_net: D5}
       rows:
         # rows are listed bottom to top; lower only exists on the outer 4 columns
         lower.row_net: D6
@@ -62,16 +67,18 @@ points:
       columns:
         near:
           key.column_net: D4
+          # free slot of the lower row (index column has no lower key)
+          rows.cluster.row_net: D6
         mid:
           key.splay: -8
           key.origin: [-0.5kx, -0.5ky]
-          key.column_net: D5
+          key.column_net: D1
         far:
           key.splay: -8
           key.origin: [-0.5kx, -0.5ky]
-          key.column_net: D2
+          key.column_net: D0
       rows:
-        cluster.row_net: D10
+        cluster.row_net: D5
 
 outlines:
   _keys:
@@ -234,6 +241,34 @@ pcbs:
           ref: matrix_inner_top
           # USB-C end flush with the board edge so the plug isn't blocked
           shift: [kx + 4, 12.5]
+        params:
+          NFC1: SDA
+          NFC2: SCL
+      # trackpad (I2C on the NFC pads, data ready on D10): wire pads just below the XIAO, next to the NFC pads,
+      # 4.7k 0805 pull-ups between them and the power switch / controller-column screw
+      trackpad:
+        what: trackpad_pads
+        where:
+          ref: matrix_inner_top
+          shift: [kx + 4, -0.5]
+        params:
+          DR: D10
+      pullup_sda:
+        what: resistor_0805
+        where:
+          ref: matrix_inner_top
+          shift: [kx + 4.8, -5]
+        params:
+          from: SDA
+          to: 3V3
+      pullup_scl:
+        what: resistor_0805
+        where:
+          ref: matrix_inner_top
+          shift: [kx + 9.2, -5]
+        params:
+          from: SCL
+          to: 3V3
       # Molex Pico-EZmate (1.65 mm mated height) on top, below keycap height; the cable runs up
       # to the cable slot (see outlines) and drops through to the battery, which sits flat under the XIAO area
       battery:
@@ -347,6 +382,9 @@ pcbs:
       switch.asym: clone
       diode.asym: clone
       mcu.asym: clone
+      trackpad.asym: clone
+      pullup_sda.asym: clone
+      pullup_scl.asym: clone
       battery.asym: clone
       mount_1.asym: clone
       mount_2.asym: clone

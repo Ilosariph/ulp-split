@@ -23,6 +23,7 @@ JLCPCB: 2 layers, 0.8 mm, LeadFree HASL, tented vias, Remove Mark.
 
 Parts per half: 25 Cherry MX ULP, 25 1N4148W (SOD-123), XIAO nRF52840, C&K PCM12SMTR power switch,
 Molex 78171-0002 Pico-EZmate header + 36920-0200 cable (cut in half), LiPo with protection circuit (401525).
+Trackpad half: 2x 4.7k 0805 (R1, R2).
 
 ## Case
 
@@ -44,9 +45,19 @@ openscad -D 'side="right"' -o right.stl case/case.scad
 
 ## Matrix
 
-col2row. Columns D0..D5 = outer, pinky, ring, middle, index, inner.
-Rows D7 top, D8 home, D9 bottom, D6 lower (outer 4 columns), D10 thumbs
-(near = index column, mid = inner, far = ring).
+col2row, 5 x 5 on D0..D9. Columns D0..D4 = outer, pinky, ring, middle, index.
+Rows D7 top, D8 home, D9 bottom, D6 lower (outer 4 columns + near thumb on D4), D5 extra
+(inner top/home/bottom on D3/D4/D2, mid thumb on D1, far thumb on D0).
+D10 and the XIAO's NFC pads (NFC1 = P0.09, NFC2 = P0.10, plated through like the battery pads) drive the trackpad.
+
+## Trackpad
+
+Right half (firmware), pads on both: TP1 below the XIAO, 1x5 2.54 mm, GND / 3V3 / DR / SDA / SCL.
+SDA = NFC1, SCL = NFC2 (UICR `nfct-pins-as-gpios`), DR = D10, R1/R2 = 4.7k 0805 pull-ups to 3V3.
+Firmware: Cirque Pinnacle (`cirque,pinnacle` from petejohanson/cirque-input-module, I2C 0x2A) on the right half,
+forwarded to the left through `zmk,input-split`. A TM040040 runs in I2C mode with R1 not fitted; wire VDD, GND, SCL,
+SDA and DR from its test pads straight to TP1 (skip 5 V adapter boards). An Azoteq IQS5xx pad (TPS43/TPS65) fits
+the same pads (RDY on DR, NRST tied to 3V3) with an IQS5xx driver module instead.
 
 ## Firmware
 

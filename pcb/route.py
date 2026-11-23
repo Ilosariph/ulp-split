@@ -16,7 +16,8 @@ board = pcbnew.LoadBoard(src)
 ds = board.GetDesignSettings()
 nc = ds.m_NetSettings.GetDefaultNetclass()
 nc.SetTrackWidth(pcbnew.FromMM(0.25))
-nc.SetClearance(pcbnew.FromMM(0.2))
+# route with 0.21 mm, check with 0.2 mm: Freerouting rounds pad-to-track gaps a few um under its rule
+nc.SetClearance(pcbnew.FromMM(0.21))
 nc.SetViaDiameter(pcbnew.FromMM(0.6))
 nc.SetViaDrill(pcbnew.FromMM(0.3))
 # Freerouting necks traces down to ~0.19 mm at pads; fine for any fab (JLCPCB min 0.127 mm)
@@ -49,6 +50,12 @@ else:
 
 if not pcbnew.ImportSpecctraSES(board, ses):
     sys.exit('SES import failed')
+nc.SetClearance(pcbnew.FromMM(0.2))
+# Freerouting sometimes necks a trace down to 0.125 mm at a pad; widen those to the 0.15 mm minimum
+# (DRC below catches it if that ever breaks clearance)
+for t in board.GetTracks():
+    if t.GetClass() == 'PCB_TRACK' and t.GetWidth() < pcbnew.FromMM(0.15):
+        t.SetWidth(pcbnew.FromMM(0.15))
 # tent all vias (solder mask over them): the switch base frame is metal and sits on the top layer
 ds.m_TentViasFront = True
 ds.m_TentViasBack = True

@@ -401,10 +401,6 @@
       },
       {
         "netclass": "Default",
-        "pattern": "D5"
-      },
-      {
-        "netclass": "Default",
         "pattern": "mirror_inner_bottom"
       },
       {
@@ -445,6 +441,10 @@
       },
       {
         "netclass": "Default",
+        "pattern": "D5"
+      },
+      {
+        "netclass": "Default",
         "pattern": "D10"
       },
       {
@@ -462,6 +462,14 @@
       {
         "netclass": "Default",
         "pattern": "BAT"
+      },
+      {
+        "netclass": "Default",
+        "pattern": "SDA"
+      },
+      {
+        "netclass": "Default",
+        "pattern": "SCL"
       },
       {
         "netclass": "Default",

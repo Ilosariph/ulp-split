@@ -3,11 +3,12 @@
 // (https://github.com/Seeed-Studio/OPL_Kicad_Library, CC BY-SA 4.0), re-centered on the module.
 // USB faces -y (top), component side up.
 //
-// Bottom pads of the module: VBAT/GND battery pads get a plated hole so they can be
-// soldered from the back of the PCB. SWD/NFC pads are present without nets so copper
-// pours keep clear of them.
+// Bottom pads of the module: VBAT/GND battery pads and NFC1/NFC2 (P0.09/P0.10, usable as GPIO with
+// CONFIG_NFCT_PINS_AS_GPIOS) get a plated hole so they can be soldered from the back of the PCB
+// (pad 1.2 mm wide, 0.8 mm drill -> 0.2 mm annular ring). SWD/EN pads are present without nets so
+// copper pours keep clear of them.
 //
-// Params: one net per pin, D0..D10, VBUS (5V), GND, V3 (3V3 out), BAT (battery +)
+// Params: one net per pin, D0..D10, VBUS (5V), GND, V3 (3V3 out), BAT (battery +), NFC1, NFC2
 
 module.exports = {
   params: {
@@ -26,7 +27,9 @@ module.exports = {
     V3: {type: 'net', value: '3V3'},
     GND: {type: 'net', value: 'GND'},
     VBUS: {type: 'net', value: 'VBUS'},
-    BAT: {type: 'net', value: 'BAT'}
+    BAT: {type: 'net', value: 'BAT'},
+    NFC1: {type: 'net', value: 'NFC1'},
+    NFC2: {type: 'net', value: 'NFC2'}
   },
   body: p => {
     const L = -8.0825
@@ -71,18 +74,20 @@ module.exports = {
       ${castellated(8, R, 7.62, p.D7, 'D7')}
 
       ${'' /* battery pads under the module, plated through for soldering from the back */}
-      (pad 19 thru_hole roundrect (at -4.4725 -0.3135 ${p.r}) (size 2.5 1.1) (drill 0.6) (layers *.Cu *.Mask) (roundrect_rratio 0.25) ${p.BAT})
-      (pad 20 thru_hole roundrect (at -4.4725 -2.2185 ${p.r}) (size 2.5 1.1) (drill 0.6) (layers *.Cu *.Mask) (roundrect_rratio 0.25) ${p.GND})
+      (pad 19 thru_hole roundrect (at -4.4725 -0.3135 ${p.r}) (size 2.5 1.2) (drill 0.8) (layers *.Cu *.Mask) (roundrect_rratio 0.25) ${p.BAT})
+      (pad 20 thru_hole roundrect (at -4.4725 -2.2185 ${p.r}) (size 2.5 1.2) (drill 0.8) (layers *.Cu *.Mask) (roundrect_rratio 0.25) ${p.GND})
       (fp_text user BAT+ (at -4.4725 1.2 ${p.r}) (layer B.SilkS) (effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror)))
       (fp_text user BAT- (at -4.4725 -3.7 ${p.r}) (layer B.SilkS) (effects (font (size 0.8 0.8) (thickness 0.12)) (justify mirror)))
 
-      ${'' /* other bottom pads, unconnected */}
+      ${'' /* NFC pads under the module (NFC1 = P0.09, NFC2 = P0.10), plated through like the battery pads */}
+      (pad 21 thru_hole roundrect (at 3.7825 9.2369 ${p.r + 90}) (size 2.5 1.2) (drill 0.8) (layers *.Cu *.Mask) (roundrect_rratio 0.25) ${p.NFC1})
+      (pad 22 thru_hole roundrect (at 5.6875 9.2369 ${p.r + 90}) (size 2.5 1.2) (drill 0.8) (layers *.Cu *.Mask) (roundrect_rratio 0.25) ${p.NFC2})
+
+      ${'' /* other bottom pads (SWDIO, SWCLK, EN, GND), unconnected */}
       (pad 15 smd circle (at -1.2975 -8.5685 ${p.r}) (size 1.7 1.7) (layers F.Cu F.Mask))
       (pad 16 smd circle (at 1.2425 -8.5685 ${p.r}) (size 1.7 1.7) (layers F.Cu F.Mask))
       (pad 17 smd circle (at -1.2975 -6.0285 ${p.r}) (size 1.7 1.7) (layers F.Cu F.Mask))
       (pad 18 smd circle (at 1.2425 -6.0285 ${p.r}) (size 1.7 1.7) (layers F.Cu F.Mask))
-      (pad 21 smd roundrect (at 3.7825 9.2369 ${p.r + 90}) (size 2.5 1.1) (layers F.Cu F.Mask) (roundrect_rratio 0.25))
-      (pad 22 smd roundrect (at 5.6875 9.2369 ${p.r + 90}) (size 2.5 1.1) (layers F.Cu F.Mask) (roundrect_rratio 0.25))
     )
     `
   }

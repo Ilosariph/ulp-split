@@ -13,4 +13,15 @@ if SHIELD_ULP_SPLIT_LEFT || SHIELD_ULP_SPLIT_RIGHT
 config ZMK_SPLIT
     default y
 
+# trackpad on the right half, forwarded to the left (central) through zmk,input-split
+config ZMK_POINTING
+    default y
+
+endif
+
+if SHIELD_ULP_SPLIT_RIGHT
+
+config I2C
+    default y
+
 endif
