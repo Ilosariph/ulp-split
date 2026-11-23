@@ -19,7 +19,7 @@ case/       OpenSCAD tray case with 401525 LiPo pocket
 - `pcb/build/{left,right}.kicad_pcb` routed boards
 - `pcb/build/jlcpcb-{left,right}.zip` Gerbers + drill
 
-JLCPCB: 2 layers, 0.8 mm, LeadFree HASL, tented vias, Remove Mark.
+JLCPCB: 2 layers, 0.6 mm, LeadFree HASL, tented vias, Remove Mark.
 
 Parts per half: 25 Cherry MX ULP, 25 1N4148WS (SOD-323, LCSC C2128), XIAO nRF52840, C&K PCM12SMTR power switch,
 Molex 78171-0002 Pico-EZmate header + 36920-0200 cable (cut in half), LiPo with protection circuit (401525).
@@ -36,7 +36,7 @@ the `mount_opt` bosses, print the case with `use_opt = false` if you use those t
 
 ## Case
 
-`case/case.scad`: 5 mm tall tray (1.2 floor, 2 mm under the PCB, 0.8 PCB, 1 mm lip). The PCB drops in on a perimeter
+`case/case.scad`: 4.8 mm tall tray (1.2 floor, 2 mm under the PCB, 0.6 PCB, 1 mm lip). The PCB drops in on a perimeter
 ledge + a post under each key and is screwed down from the top: M2 x 4 screws into heat-set inserts (M2 x 3, 3.2 mm OD)
 in bosses under the board (`screw_hole = 1.7` for self-tapping instead).
 9 holes have the screw head clear of the keycaps (small tabs on the outer edge, gap above the thumbs, controller column).
