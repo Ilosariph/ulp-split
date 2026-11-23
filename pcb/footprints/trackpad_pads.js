@@ -17,8 +17,8 @@ module.exports = {
       const shape = i === 0 ? 'rect' : 'circle'
       return `
       (pad ${i + 1} thru_hole ${shape} (at ${x} 0 ${p.r}) (size 1.7 1.7) (drill 1.0) (layers *.Cu *.Mask) ${net})
-      (fp_text user ${label} (at ${x} 1.8 ${p.r}) (layer F.SilkS) (effects (font (size 0.6 0.6) (thickness 0.1))))
-      (fp_text user ${label} (at ${x} 1.8 ${p.r}) (layer B.SilkS) (effects (font (size 0.6 0.6) (thickness 0.1)) (justify mirror)))`
+      (fp_text user ${label} (at ${x} 1.8 ${p.r}) (layer F.SilkS) (effects (font (size 0.8 0.8) (thickness 0.15))))
+      (fp_text user ${label} (at ${x} 1.8 ${p.r}) (layer B.SilkS) (effects (font (size 0.8 0.8) (thickness 0.15)) (justify mirror)))`
     }).join('')
     return `
     (module Trackpad_Pads_1x5 (layer F.Cu) (tedit 6519A6A6)

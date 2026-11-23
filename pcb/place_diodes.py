@@ -6,7 +6,7 @@
 # the key, + CAP), every other footprint's bounding box (+ 0.3) and the board edge (EDGE), on both halves.
 import sys, re
 import pcbnew
-from shapely.geometry import Polygon, box
+from shapely.geometry import Polygon, box, Point
 from shapely.ops import unary_union
 from shapely import affinity
 from scipy.optimize import linear_sum_assignment
@@ -25,7 +25,7 @@ def load(path):
     b.GetBoardPolygonOutlines(so, True)
     ol = so.Outline(0)
     board = Polygon([(mm(ol.CPoint(i).x), mm(ol.CPoint(i).y)) for i in range(ol.PointCount())])
-    blocked, switches = [], {}
+    blocked, switches, parts = [], {}, []
     for f in b.GetFootprints():
         r = f.GetReference()
         x, y, a = mm(f.GetPosition().x), mm(f.GetPosition().y), f.GetOrientationDegrees()
@@ -40,10 +40,11 @@ def load(path):
         else:
             bb = f.GetBoundingBox(False)
             blocked.append(box(mm(bb.GetX()), mm(bb.GetY()), mm(bb.GetRight()), mm(bb.GetBottom())).buffer(0.3))
-    return board.buffer(-EDGE).difference(unary_union(blocked)), switches, b
+            parts.append(blocked[-1])
+    return board.buffer(-EDGE).difference(unary_union(blocked)), switches, (board, unary_union(parts))
 
 
-free_l, sw_l, bl = load(sys.argv[1])
+free_l, sw_l, (board_l, parts_l) = load(sys.argv[1])
 free_r, sw_r, _ = load(sys.argv[2])
 # mirror axis: x of a key on the left + x of the same key on the right = 2 * axis
 k0 = next(iter(sw_l))
@@ -82,6 +83,15 @@ for i, j in sorted(zip(ki, ci), key=lambda t: keys[t[0]]):
     c, r = k.split('_')
     label = COL[c] + (TH[c] if r == 'cluster' else ROW[r])
     point = ('thumb_' if r == 'cluster' else 'matrix_') + k
+    # label goes on the long side whose label area lies further inside the board
+    def depth(sd):
+        dx, dy = (0, sd * 1.35) if rot == 0 else (sd * 1.35, 0)   # local +y -> KiCad +y (rot 0) / +x (rot 90)
+        lb = box(-0.9, -0.5, 0.9, 0.5) if rot == 0 else box(-0.5, -0.9, 0.5, 0.9)
+        lb = affinity.translate(lb, x + dx, y + dy)
+        if not board_l.buffer(-0.2).contains(lb) or lb.intersects(parts_l):
+            return -1
+        return board_l.boundary.distance(lb)
+    side = 1 if depth(1) >= depth(-1) else -1
     worst = max(worst, cost[i][j])
     out.append(f"""      diode_{k}:
         what: diode_sod323
@@ -93,7 +103,8 @@ for i, j in sorted(zip(ki, ci), key=lambda t: keys[t[0]]):
         params:
           from: "{{{{colrow}}}}"
           to: "{{{{row_net}}}}"
-          label: {label}""")
+          label: {label}
+          label_side: {side}""")
 print(f'longest switch -> diode distance {worst:.1f} mm', file=sys.stderr)
 clones = '\n'.join(f'      diode_{k}.asym: clone' for k in keys)
 

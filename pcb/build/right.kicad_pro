@@ -425,7 +425,7 @@
       },
       {
         "netclass": "Default",
-        "pattern": "D5"
+        "pattern": "D6"
       },
       {
         "netclass": "Default",
@@ -441,7 +441,7 @@
       },
       {
         "netclass": "Default",
-        "pattern": "D6"
+        "pattern": "D5"
       },
       {
         "netclass": "Default",

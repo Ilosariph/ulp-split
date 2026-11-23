@@ -30,6 +30,9 @@ labelled with its key (column O/P/R/M/I/N/T + row T/H/B/L, thumbs TN/TM/TF; bar 
 solder from the switch, battery and NFC pads. `pcb/place_diodes.py` picks the spots (>= 0.25 mm from the keycap
 outlines, both halves) and rewrites the generated block in `config.yaml`; rerun it after `build.sh` when keys or parts
 move, then build again.
+Backup: SOD-123 pads (1N4148W, `DB*`) on the back under each switch, in parallel with the top diode. Fit one diode
+per key. Back diodes need the 2 mm gap under the PCB; under the index-bottom and inner-home keys they sit close to
+the `mount_opt` bosses, print the case with `use_opt = false` if you use those two.
 
 ## Case
 
