@@ -33,8 +33,9 @@ in bosses under the board (`screw_hole = 1.7` for self-tapping instead).
 9 holes have the screw head clear of the keycaps (small tabs on the outer edge, gap above the thumbs, controller column).
 7 more (`mount_opt_*`) sit between switch housings under the keycaps: only for low heads (wafer / ISO 7380), check
 keycap clearance first; `use_opt = false` drops their bosses. The 401525 LiPo sits in its own pocket in the
-notch between the far thumb key and the bottom of the controller column, next to the battery connector; a channel
-under the PCB runs from the cable hole to the pocket. Openings for USB-C and the power switch lever.
+notch between the far thumb key and the bottom of the controller column. The battery connector sits at the bottom edge of
+the controller column with its plug facing the notch, so the wires drop straight into the pocket (no cable hole).
+The notch takes a cell up to ~25 x 26 x 4 mm: set `bat` in `case.scad`. Openings for USB-C and the power switch lever.
 
 ```
 openscad -o left.stl case/case.scad

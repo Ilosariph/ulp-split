@@ -26,7 +26,7 @@ screw_hole = 3.2;       // 3.2 heat-set insert, 1.7 self-tapping M2
 use_opt = true;         // bosses for the optional under-keycap holes
 
 /* [Battery 401525] */
-bat     = [25, 15, 4.0];  // nominal L x W x T (check your cell incl. protection PCB + tape)
+bat     = [25, 15, 4.0];  // nominal L x W x T (check your cell incl. protection PCB + tape); notch fits up to ~25 x 26
 bat_clr = 0.4;          // per side (L, W)
 pocket_floor = 0.6;     // floor under the battery
 
@@ -34,7 +34,7 @@ pocket_floor = 0.6;     // floor under the battery
 usb_w   = 13;           // USB-C plug overmold opening
 usb_z   = 2.0;          // opening starts this high above case bottom
 sw_w    = 9;            // power switch lever opening
-wire_w  = 3;            // wire channel, connector/cable slot -> pocket
+conn_w  = 6.5;          // pass-through pocket -> under the PCB for the battery plug (connector fitted underneath)
 
 $fn = 48;
 
@@ -58,14 +58,13 @@ post_off = [0, 2];      // key-local spot clear of switch pins (y -2.3) and diod
 // M2 holes, same as pcb/config.yaml mount_* / mount_opt_*
 mounts = [[-11, 42.5], [-11, 8.5], [9, 61.5], [9, -10.5],         // outer side tabs
           [65.9, 14.5], [77.7, 15.2], [98.0, 12.6],               // thumb gap
-          [105.8, 50.2], [122.1, 34.0]];                          // controller column
+          [105.8, 50.2], [120.5, 43.5]];                          // controller column
 mounts_opt = [[9, 25.5], [27.8, 17], [27.8, 51], [44.1, 34], [63.8, 51], [72, 34.4], [86.7, 48.8]];
 holes = concat(mounts, use_opt ? mounts_opt : []);
 
 // parts referenced to matrix_inner_top (90, 56.95)
 mcu_c   = [112, 69.45];  // XIAO, USB-C at +y board edge (y 79.95)
-conn_c  = [112, 35.45];  // Pico-EZmate header
-slot_c  = [112, 43.95];  // cable hole through the PCB
+conn_c  = [112, 46];     // Pico-EZmate header, plug faces -y, wires leave over the column's bottom edge
 power_c = [122.9, 50.95];// slide switch, lever towards +x
 usb_edge = 79.95;
 mcu_x1   = 125;          // MCU column outer edge (x)
@@ -74,18 +73,16 @@ mcu_x1   = 125;          // MCU column outer edge (x)
 pk_w = bat[0] + 2*bat_clr;
 pk_h = bat[1] + 2*bat_clr;
 pk_x0 = 101 + clr;               // inner column edge
-pk_y1 = 30.95 - clr;             // MCU column bottom edge
+col_y0 = 39.25;                  // MCU column bottom edge (PCB)
+pk_y1 = col_y0 - clr;
 pk = [pk_x0, pk_y1 - pk_h, pk_w, pk_h];   // x, y, w, h
 
-module pcb2d() {
-  // close the cable slot (1.5 mm slit + r1.25 hole) so the case doesn't follow it
-  offset(r = -1.5) offset(r = 1.5) import("pcb_left.dxf");
-}
+module pcb2d() { import("pcb_left.dxf"); }
 
 module notch_fill() {
   px1 = pk[0] + pk[2];
   // points sit inside the inner/MCU/thumb outlines so the union has no slivers
-  polygon([[100, 33], [mcu_x1, 33], [px1, pk[1] + pk[3] - 2], [px1, 1], [107, 8.5], [100, 11]]);
+  polygon([[100, col_y0 + 2], [mcu_x1, col_y0 + 2], [px1, pk[1] + pk[3] - 2], [px1, 1], [107, 8.5], [100, 11]]);
 }
 
 module outer2d() { offset(r = clr + wall) union() { pcb2d(); notch_fill(); } }
@@ -112,9 +109,9 @@ module case_left() {
     for (m = holes) translate([m[0], m[1], -1]) cylinder(d = screw_hole, h = z_pcb + 1.01);
     // battery pocket
     translate([0, 0, pocket_floor]) linear_extrude(h) pocket2d();
-    // wire channel through the ledge: cable hole -> pocket (under the PCB)
-    translate([slot_c[0] - wire_w/2, pk[1] + pk[3] - 1, floor_t])
-      cube([wire_w, slot_c[1] - (pk[1] + pk[3]) + 2, gap + 0.01]);
+    // pass-through under the PCB edge, pocket -> connector (courtyard ends at the edge, reaches 2.8 mm past its centre)
+    translate([conn_c[0] - conn_w/2, pk[1] + pk[3] - 1, pocket_floor])
+      cube([conn_w, conn_c[1] + 2.8 + 0.5 - (pk[1] + pk[3] - 1), z_pcb - pocket_floor + 0.01]);
     // USB-C
     translate([mcu_c[0] - usb_w/2, usb_edge - 3, usb_z]) cube([usb_w, 10, h]);
     // power switch lever (only above PCB top, ledge keeps supporting the edge)

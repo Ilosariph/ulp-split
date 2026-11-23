@@ -85,12 +85,14 @@ outlines:
     - what: rectangle
       where: /^(matrix|thumb)_/
       size: [kx, ky]
+  # controller column; its bottom edge (inner_top - 17.7 after the 2 mm expand) ends at the battery connector's plug,
+  # the notch below it holds the battery
   _mcu:
     - what: rectangle
       where:
         ref: matrix_inner_top
-        shift: [kx + 4, -1.5]
-      size: [22, 45]
+        shift: [kx + 4, 2.65]
+      size: [22, 36.7]
   # two small rectangular patches for the slivers next to the thumb cluster:
   # square off the corner below the middle column's lowest key, and run the inner column's
   # outer edge straight down to the thumbs
@@ -141,26 +143,11 @@ outlines:
     - _mcu
     - _fill
     - _tabs
-  # cable hole for the battery wires + slit out to the outer edge, so the cable slides in from the side
-  _cable_slot:
-    - what: circle
-      where:
-        ref: matrix_inner_top
-        shift: [kx + 4, -13]
-      radius: 1.25
-    - what: rectangle
-      where:
-        ref: matrix_inner_top
-        shift: [kx + 11, -13]
-      size: [16, 1.5]
   left:
     - what: outline
       name: _raw
       expand: 2
       joints: round
-    - what: outline
-      name: _cable_slot
-      operation: subtract
   _keys_r:
     - $extends: outlines._keys.0
       asym: clone
@@ -177,19 +164,11 @@ outlines:
     - _mcu_r
     - _fill_r
     - _tabs_r
-  _cable_slot_r:
-    - $extends: outlines._cable_slot.0
-      asym: clone
-    - $extends: outlines._cable_slot.1
-      asym: clone
   right:
     - what: outline
       name: _raw_r
       expand: 2
       joints: round
-    - what: outline
-      name: _cable_slot_r
-      operation: subtract
   # board outline shrunk by the edge clearance; route.py hands this to Freerouting instead of the real edge
   left_route:
     - what: outline
@@ -269,16 +248,18 @@ pcbs:
         params:
           from: SCL
           to: 3V3
-      # Molex Pico-EZmate (1.65 mm mated height) on top, below keycap height; the cable runs up
-      # to the cable slot (see outlines) and drops through to the battery, which sits flat under the XIAO area
+      # Molex Pico-EZmate (1.65 mm mated height) on top, below keycap height; plug faces the bottom edge of the
+      # controller column, its courtyard (plug + wire exit) ends at the edge, wires drop into the battery pocket below
       battery:
         what: battery_connector_molex_pico_ezmate_1x02
         where:
           ref: matrix_inner_top
-          shift: [kx + 4, -21.5]
-          rotate: 180
+          shift: [kx + 4, -10.95]
         params:
           side: F
+          # pads on both sides: solder it on top, or underneath (fits the 2 mm gap under the PCB, 1.65 mm mated)
+          # for a thinner case; same cable polarity either way, fit only one
+          reversible: true
           BAT_P: BAT_IN
           BAT_N: GND
       # Alps SSSS811101 side-actuated slide switch, lever sticks out past the outer edge of the controller area
@@ -338,7 +319,7 @@ pcbs:
         what: mounting_hole_m2
         where:
           ref: matrix_outer_lower
-          shift: [122.1, 34.0]
+          shift: [120.5, 43.5]
       mount_opt_1:
         what: mounting_hole_m2
         where:
