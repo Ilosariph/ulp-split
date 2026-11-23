@@ -21,9 +21,15 @@ case/       OpenSCAD tray case with 401525 LiPo pocket
 
 JLCPCB: 2 layers, 0.8 mm, LeadFree HASL, tented vias, Remove Mark.
 
-Parts per half: 25 Cherry MX ULP, 25 1N4148W (SOD-123), XIAO nRF52840, C&K PCM12SMTR power switch,
+Parts per half: 25 Cherry MX ULP, 25 1N4148WS (SOD-323, LCSC C2128), XIAO nRF52840, C&K PCM12SMTR power switch,
 Molex 78171-0002 Pico-EZmate header + 36920-0200 cable (cut in half), LiPo with protection circuit (401525).
 Trackpad half: 2x 4.7k 0805 (R1, R2).
+
+Diodes sit on top, outside every keycap (strips at the column ends, beside the inner column, thumb gap), each
+labelled with its key (column O/P/R/M/I/N/T + row T/H/B/L, thumbs TN/TM/TF; bar = cathode). The bottom only has
+solder from the switch, battery and NFC pads. `pcb/place_diodes.py` picks the spots (>= 0.25 mm from the keycap
+outlines, both halves) and rewrites the generated block in `config.yaml`; rerun it after `build.sh` when keys or parts
+move, then build again.
 
 ## Case
 

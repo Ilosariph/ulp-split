@@ -2,7 +2,7 @@
 // Coordinates = ergogen points (left half, mm, y up). Right half = mirror image.
 // Board outline: pcb_left.dxf (copy of pcb/output/outlines/left.dxf, re-copy after changing pcb/config.yaml).
 //
-// Stack (z, from bottom):  floor | gap for diodes + switch pins | PCB | lip
+// Stack (z, from bottom):  floor | gap (solder bumps, battery connector if fitted underneath) | PCB | lip
 // PCB rests on a perimeter ledge + one post per key and is held by M2 screws from the top into bosses
 // (heat-set inserts M2 x 3 x 3.2 OD, or self-tapping with screw_hole = 1.7). Screws M2 x 4.
 // mounts: heads clear of the keycaps. mounts_opt: under the keycaps, between switch housings (low head only).
@@ -16,7 +16,7 @@ side = "left";          // "left" | "right"
 wall    = 1.6;          // outer wall
 clr     = 0.3;          // PCB edge clearance
 floor_t = 1.2;          // floor under the PCB
-gap     = 2.0;          // floor to PCB bottom (SOD-123 ~1.2 + THT pin stubs)
+gap     = 2.0;          // floor to PCB bottom (Pico-EZmate underneath: 1.65 mated; otherwise only solder bumps)
 pcb_t   = 0.8;
 lip     = 1.0;          // wall height above PCB top
 ledge   = 1.5;          // perimeter shelf under the PCB edge
@@ -53,7 +53,7 @@ keys = [
   [90, 22.95, 0], [90, 39.95, 0], [90, 56.95, 0],             // inner
   [76.5, 5, -6], [95.3512, 1.676, -14], [113.5563, -4.2392, -22], // thumbs near, mid, far
 ];
-post_off = [0, 2];      // key-local spot clear of switch pins (y -2.3) and diode (y +5.5)
+post_off = [0, 2];      // key-local spot clear of the switch pads (y -2.3)
 
 // M2 holes, same as pcb/config.yaml mount_* / mount_opt_*
 mounts = [[-11, 42.5], [-11, 8.5], [9, 61.5], [9, -10.5],         // outer side tabs

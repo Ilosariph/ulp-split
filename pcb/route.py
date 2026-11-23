@@ -16,8 +16,8 @@ board = pcbnew.LoadBoard(src)
 ds = board.GetDesignSettings()
 nc = ds.m_NetSettings.GetDefaultNetclass()
 nc.SetTrackWidth(pcbnew.FromMM(0.25))
-# route with 0.21 mm, check with 0.2 mm: Freerouting rounds pad-to-track gaps a few um under its rule
-nc.SetClearance(pcbnew.FromMM(0.21))
+# route with 0.22 mm, check with 0.2 mm: Freerouting rounds pad-to-track gaps a few um under its rule
+nc.SetClearance(pcbnew.FromMM(0.22))
 nc.SetViaDiameter(pcbnew.FromMM(0.6))
 nc.SetViaDrill(pcbnew.FromMM(0.3))
 # Freerouting necks traces down to ~0.19 mm at pads; fine for any fab (JLCPCB min 0.127 mm)
